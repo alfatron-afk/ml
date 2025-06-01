@@ -1,0 +1,29 @@
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Load the dataset from a CSV file in the folder (provide your file path)
+file_path =("/content/drive/MyDrive/housing.csv")
+df = pd.read_csv(file_path)
+
+# Check the first few rows of the dataset
+print(df.head())
+
+# Select only numerical columns before computing the correlation matrix
+numerical_df = df.select_dtypes(include=[np.number])
+
+# Compute the correlation matrix
+corr_matrix = numerical_df.corr() # Apply corr() to the numerical DataFrame
+
+# Plot the correlation matrix using a heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5)
+plt.title("Correlation Matrix of California Housing Dataset")
+plt.show()
+
+# Create a pair plot to visualize pairwise relationships between numerical features
+# We should also apply pairplot only on numerical data
+sns.pairplot(numerical_df, height=2.5)
+plt.suptitle("Pairwise Relationships of Features", y=1.02)
+plt.show()
