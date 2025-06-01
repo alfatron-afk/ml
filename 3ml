@@ -1,0 +1,49 @@
+import numpy as np
+import pandas as pd
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+
+# Step 1: Load the Iris dataset from a local file (replace with your file path if necessary)
+# Example: iris_df = pd.read_csv('path_to_iris_dataset.csv')
+# iris_df = pd.read_csv('iris.csv') # Assuming you've saved the Iris dataset as a CSV file
+
+# If you already have the dataset as a pandas DataFrame, use the following:
+# Assuming the data has columns 'sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)'
+# and the target labels are stored separately (for example, 'species')
+
+# Sample DataFrame structure (use your own dataset loading method)
+iris_df = pd.read_csv("/content/drive/MyDrive/Iris.csv") # Replace this with actual path to the CSV
+
+# Step 2: Extract feature data and labels
+# Check the column names in your DataFrame to find the correct target column name.
+# You can print iris_df.columns to see all column names.
+# Based on the global variable information, the column might be named 'Species'.
+data = iris_df.drop('Species', axis=1) # Changed 'species' to 'Species'
+labels = iris_df['Species'] # Changed 'species' to 'Species'
+label_names = labels.unique()
+
+# Step 3: Perform PCA to reduce dimensionality to 2
+pca = PCA(n_components=2)
+data_reduced = pca.fit_transform(data)
+
+# Step 4: Create a DataFrame for the reduced data
+reduced_df = pd.DataFrame(data_reduced, columns=['Principal Component 1', 'Principal Component 2'])
+reduced_df['Label'] = labels
+# Step 5: Plot the reduced data
+plt.figure(figsize=(8, 6))
+colors = ['r', 'g', 'b']
+
+for i, label in enumerate(np.unique(labels)):
+    plt.scatter(
+        reduced_df[reduced_df['Label'] == label]['Principal Component 1'],
+        reduced_df[reduced_df['Label'] == label]['Principal Component 2'],
+        label=label_names[i], # This will map label to the target names
+        color=colors[i]
+    )
+
+plt.title('PCA on Iris Dataset')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.legend()
+plt.grid()
+plt.show()
